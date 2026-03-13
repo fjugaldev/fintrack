@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTrack — Feature Specification v1.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0D1B2A;
+    --navy2: #1B2D42;
+    --navy3: #243447;
+    --accent: #3B82F6;
+    --accent2: #60A5FA;
+    --green: #10B981;
+    --green2: #34D399;
+    --amber: #F59E0B;
+    --purple: #8B5CF6;
+    --red: #EF4444;
+    --ink: #0F172A;
+    --ink2: #1E293B;
+    --muted: #64748B;
+    --border: #E2E8F0;
+    --surface: #F8FAFC;
+    --white: #FFFFFF;
+    --phase-mvp: #10B981;
+    --phase-2: #3B82F6;
+    --phase-3: #8B5CF6;
+    --phase-4: #EF4444;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    line-height: 1.6;
+  }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--navy);
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 32px 0;
+  }
+
+  .sidebar-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-logo .app-name {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+
+  .sidebar-logo .version {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    margin-top: 2px;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    padding: 16px 24px 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 24px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.55);
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+    cursor: pointer;
+  }
+
+  .nav-item:hover {
+    color: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.05);
+    border-left-color: rgba(255,255,255,0.2);
+  }
+
+  .nav-item.active {
+    color: #fff;
+    background: rgba(59,130,246,0.15);
+    border-left-color: var(--accent);
+  }
+
+  .nav-item .nav-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.2);
+    min-width: 18px;
+  }
+
+  .phase-legend {
+    margin: 16px 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.07);
+  }
+
+  .phase-legend-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 4px;
+  }
+
+  .phase-dot {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .phase-dot .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── MAIN CONTENT ─── */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    background: var(--navy);
+    padding: 72px 64px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(59,130,246,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 200px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 16px;
+  }
+
+  .hero-title {
+    font-family: 'Fraunces', serif;
+    font-size: 56px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: -1.5px;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+
+  .hero-title span {
+    color: var(--accent2);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    max-width: 560px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hero-stat .num {
+    font-family: 'Fraunces', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .hero-stat .label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    font-weight: 400;
+  }
+
+  .hero-stat .num .unit {
+    font-size: 16px;
+    color: var(--accent2);
+  }
+
+  /* ─── PHASE BADGES IN HERO ─── */
+  .phase-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+
+  .phase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid;
+  }
+
+  /* ─── CONTENT AREA ─── */
+  .content {
+    padding: 0 64px 80px;
+    max-width: 1100px;
+  }
+
+  /* ─── SECTION ─── */
+  .section {
+    padding-top: 64px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 8px;
+    min-width: 28px;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .section-desc {
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-weight: 300;
+  }
+
+  /* ─── FEATURE TABLE ─── */
+  .feature-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .feature-table thead tr {
+    background: var(--ink2);
+  }
+
+  .feature-table thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+    white-space: nowrap;
+  }
+
+  .feature-table thead th:first-child { border-radius: 8px 0 0 0; width: 38px; }
+  .feature-table thead th:last-child { border-radius: 0 8px 0 0; }
+
+  .feature-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .feature-table tbody tr:hover { background: #F1F5FB; }
+  .feature-table tbody tr:last-child { border-bottom: none; }
+
+  .feature-table td {
+    padding: 13px 16px;
+    vertical-align: top;
+  }
+
+  .feature-table td:first-child {
+    font-size: 18px;
+    text-align: center;
+    padding-top: 14px;
+    width: 44px;
+  }
+
+  .feature-name {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 13.5px;
+    white-space: nowrap;
+  }
+
+  .feature-desc {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  /* ─── PHASE BADGE ─── */
+  .phase {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+  }
+
+  .phase-mvp  { background: #DCFCE7; color: #15803D; }
+  .phase-2    { background: #DBEAFE; color: #1D4ED8; }
+  .phase-3    { background: #EDE9FE; color: #6D28D9; }
+  .phase-4    { background: #FEE2E2; color: #B91C1C; }
+
+  /* ─── AI COST TABLE ─── */
+  .ai-cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .ai-cost-table thead tr { background: var(--ink2); }
+
+  .ai-cost-table thead th {
+    padding: 11px 16px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .ai-cost-table thead th:first-child {
+    text-align: left;
+    border-radius: 8px 0 0 0;
+  }
+
+  .ai-cost-table thead th:last-child { border-radius: 0 8px 0 0; }
+
+  .ai-cost-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.1s;
+  }
+
+  .ai-cost-table tbody tr:hover { background: #F1F5FB; }
+  .ai-cost-table tbody tr:last-child { border-bottom: none; }
+
+  .ai-cost-table td {
+    padding: 14px 16px;
+    vertical-align: middle;
+  }
+
+  .ai-cost-table td:not(:first-child) { text-align: center; }
+
+  .model-name { font-weight: 600; color: var(--ink); font-size: 14px; }
+  .model-provider { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  .price-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ink2);
+  }
+
+  .rec-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .rec-saas  { background: #DCFCE7; color: #15803D; }
+  .rec-mvp   { background: #FEF3C7; color: #92400E; }
+  .rec-alt   { background: #DBEAFE; color: #1D4ED8; }
+  .rec-basic { background: #F1F5F9; color: #64748B; }
+
+  /* ─── CALLOUT BOXES ─── */
+  .callout {
+    padding: 16px 20px;
+    border-radius: 8px;
+    border-left: 3px solid;
+    margin: 20px 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+
+  .callout-blue  { background: #EFF6FF; border-color: var(--accent); color: #1E40AF; }
+  .callout-green { background: #F0FDF4; border-color: var(--green);  color: #166534; }
+  .callout-amber { background: #FFFBEB; border-color: var(--amber);  color: #92400E; }
+
+  .callout strong { font-weight: 600; }
+
+  /* ─── PHASE SUMMARY TABLE ─── */
+  .phase-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+
+  .phase-table thead tr { background: var(--ink2); }
+
+  .phase-table thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+
+  .phase-table thead th:first-child { border-radius: 8px 0 0 0; width: 100px; }
+  .phase-table thead th:last-child  { border-radius: 0 8px 0 0; width: 120px; }
+
+  .phase-table tbody tr { border-bottom: 1px solid var(--border); }
+  .phase-table tbody tr:last-child { border-bottom: none; }
+
+  .phase-table td { padding: 14px 16px; vertical-align: top; }
+
+  .phase-label {
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .phase-features {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+    font-weight: 300;
+  }
+
+  .time-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink2);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* ─── FOOTER ─── */
+  .doc-footer {
+    margin-top: 80px;
+    padding: 32px 64px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    background: var(--white);
+  }
+
+  .doc-footer .footer-brand {
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    color: var(--ink2);
+    font-weight: 600;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero { padding: 48px 24px 40px; }
+    .hero-title { font-size: 36px; }
+    .hero-sub { font-size: 15px; }
+    .hero-meta { gap: 20px; }
+    .hero-stat .num { font-size: 24px; }
+    .content { padding: 0 24px 60px; }
+    .doc-footer { padding: 24px; flex-direction: column; gap: 12px; text-align: center; }
+    .feature-table, .ai-cost-table, .phase-table { font-size: 12px; }
+    .feature-table td, .ai-cost-table td, .phase-table td { padding: 10px 10px; }
+    .feature-table thead th, .ai-cost-table thead th, .phase-table thead th { padding: 9px 10px; }
+    .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero { padding: 40px; }
+    .content { padding: 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="app-name">💰 FinTrack</div>
+    <div class="version">Feature Spec · v1.1 · Mar 2026</div>
+  </div>
+
+  <div class="nav-section-label">Módulos</div>
+  <a class="nav-item" href="#s1"><span class="nav-num">01</span> Auth &amp; Onboarding</a>
+  <a class="nav-item" href="#s2"><span class="nav-num">02</span> Cuentas</a>
+  <a class="nav-item" href="#s3"><span class="nav-num">03</span> Transacciones</a>
+  <a class="nav-item" href="#s4"><span class="nav-num">04</span> OCR + AI</a>
+  <a class="nav-item" href="#s5"><span class="nav-num">05</span> Categorías</a>
+  <a class="nav-item" href="#s6"><span class="nav-num">06</span> Presupuesto</a>
+  <a class="nav-item" href="#s7"><span class="nav-num">07</span> Recurrentes</a>
+  <a class="nav-item" href="#s8"><span class="nav-num">08</span> Metas de Ahorro</a>
+  <a class="nav-item" href="#s9"><span class="nav-num">09</span> Price Tracking</a>
+  <a class="nav-item" href="#s10"><span class="nav-num">10</span> Dashboard</a>
+  <a class="nav-item" href="#s11"><span class="nav-num">11</span> Reportes</a>
+  <a class="nav-item" href="#s12"><span class="nav-num">12</span> Notificaciones</a>
+  <a class="nav-item" href="#s13"><span class="nav-num">13</span> Configuración</a>
+  <a class="nav-item" href="#s14"><span class="nav-num">14</span> PWA / Móvil</a>
+  <a class="nav-item" href="#s15"><span class="nav-num">15</span> Monetización SaaS</a>
+  <a class="nav-item" href="#s16"><span class="nav-num">16</span> Modelos AI &amp; Costos</a>
+  <a class="nav-item" href="#summary"><span class="nav-num">—</span> Resumen de Fases</a>
+
+  <div class="phase-legend">
+    <div class="phase-legend-title">Fases</div>
+    <div class="phase-dot"><span class="dot" style="background:#10B981"></span> MVP — Lanzamiento</div>
+    <div class="phase-dot"><span class="dot" style="background:#3B82F6"></span> Fase 2 — Crecimiento</div>
+    <div class="phase-dot"><span class="dot" style="background:#8B5CF6"></span> Fase 3 — Avanzado</div>
+    <div class="phase-dot"><span class="dot" style="background:#EF4444"></span> Fase 4 — SaaS</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Product Specification Document</div>
+    <h1 class="hero-title">Fin<span>Track</span></h1>
+    <p class="hero-sub">App de finanzas personales con control de gastos por categorías, OCR de tickets via IA, seguimiento de precios de productos y evolución de tu canasta personal.</p>
+
+    <div class="hero-meta">
+      <div class="hero-stat">
+        <div class="num">16<span class="unit"> mód</span></div>
+        <div class="label">Módulos totales</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">110<span class="unit">+</span></div>
+        <div class="label">Features definidos</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">4<span class="unit"> fases</span></div>
+        <div class="label">De MVP a SaaS</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">14<span class="unit">-19</span></div>
+        <div class="label">Semanas estimadas</div>
+      </div>
+    </div>
+
+    <div class="phase-badges">
+      <span class="phase-badge" style="background:rgba(16,185,129,0.12);border-color:rgba(16,185,129,0.3);color:#34D399">● MVP</span>
+      <span class="phase-badge" style="background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);color:#60A5FA">● Fase 2 — Crecimiento</span>
+      <span class="phase-badge" style="background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3);color:#A78BFA">● Fase 3 — Avanzado</span>
+      <span class="phase-badge" style="background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);color:#FCA5A5">● Fase 4 — SaaS</span>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STACK -->
+    <div class="section" id="stack">
+      <div class="section-header">
+        <div class="section-num">—</div>
+        <div>
+          <h2 class="section-title">Stack Tecnológico</h2>
+          <p class="section-desc">Tecnologías base del proyecto</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr>
+            <th></th>
+            <th>Capa</th>
+            <th>Tecnología</th>
+            <th>Notas</th>
+          </tr></thead>
+          <tbody>
+            <tr><td>⚡</td><td class="feature-name">Frontend</td><td class="feature-desc">Next.js 16 (App Router) + Shadcn UI + Tailwind CSS</td><td></td></tr>
+            <tr><td>🗄️</td><td class="feature-name">Base de datos</td><td class="feature-desc">Supabase (Postgres) + Drizzle ORM</td><td></td></tr>
+            <tr><td>🔐</td><td class="feature-name">Autenticación</td><td class="feature-desc">Supabase Auth (email OTP 6 dígitos, Google, Facebook)</td><td></td></tr>
+            <tr><td>🤖</td><td class="feature-name">AI / OCR</td><td class="feature-desc">Gemini 2.5 Flash (SaaS) · Claude Haiku 4.5 (MVP)</td><td></td></tr>
+            <tr><td>📦</td><td class="feature-name">Storage</td><td class="feature-desc">Supabase Storage (fotos de tickets)</td><td></td></tr>
+            <tr><td>📊</td><td class="feature-name">Charts</td><td class="feature-desc">Recharts</td><td></td></tr>
+            <tr><td>💳</td><td class="feature-name">Billing</td><td class="feature-desc">Polar.sh (Merchant of Record)</td><td></td></tr>
+            <tr><td>🔁</td><td class="feature-name">Cron jobs</td><td class="feature-desc">Supabase Edge Functions + pg_cron</td><td></td></tr>
+            <tr><td>🚀</td><td class="feature-name">Deploy</td><td class="feature-desc">Vercel (frontend) + Supabase Cloud</td><td></td></tr>
+            <tr><td>📱</td><td class="feature-name">PWA</td><td class="feature-desc">Serwist (@serwist/next) + idb (IndexedDB wrapper para offline sync)</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S1 -->
+    <div class="section" id="s1">
+      <div class="section-header">
+        <div class="section-num">01</div>
+        <div>
+          <h2 class="section-title">Autenticación y Onboarding</h2>
+          <p class="section-desc">Registro, acceso y configuración inicial del usuario</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🔢</td><td class="feature-name">Email + OTP (6 dígitos)</td><td class="feature-desc">Acceso sin contraseña: el usuario ingresa su email y recibe un código numérico de 6 dígitos via Supabase Auth</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔗</td><td class="feature-name">OAuth (Google / Facebook)</td><td class="feature-desc">Login social sin fricción via Google y Facebook para onboarding rápido</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🧭</td><td class="feature-name">Wizard de configuración inicial</td><td class="feature-desc">Pasos guiados: moneda, cuentas, categorías por defecto y presupuesto inicial</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>👤</td><td class="feature-name">Perfil de usuario</td><td class="feature-desc">Nombre, foto, moneda principal, zona horaria, idioma (ES/EN)</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔒</td><td class="feature-name">2FA / MFA</td><td class="feature-desc">Autenticación de dos factores para mayor seguridad</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏠</td><td class="feature-name">Multi-perfil familiar</td><td class="feature-desc">Varios perfiles bajo una misma cuenta para finanzas del hogar</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S2 -->
+    <div class="section" id="s2">
+      <div class="section-header">
+        <div class="section-num">02</div>
+        <div>
+          <h2 class="section-title">Gestión de Cuentas</h2>
+          <p class="section-desc">Efectivo, bancos, tarjetas y wallets</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🏦</td><td class="feature-name">Múltiples cuentas</td><td class="feature-desc">Efectivo, cuenta corriente, ahorro, tarjeta de crédito, inversión, wallet crypto</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>💵</td><td class="feature-name">Multi-moneda</td><td class="feature-desc">Soporte de múltiples monedas con conversión automática a moneda base</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Balance en tiempo real</td><td class="feature-desc">Saldo actualizado automáticamente con cada transacción registrada</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🎨</td><td class="feature-name">Personalización de cuentas</td><td class="feature-desc">Nombre, color, icono y tipo de cuenta definidos por el usuario</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔄</td><td class="feature-name">Transferencias entre cuentas</td><td class="feature-desc">Mover dinero entre cuentas propias sin doble conteo</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>💳</td><td class="feature-name">Tarjeta de crédito con ciclo</td><td class="feature-desc">Soporte para fecha de corte, límite de crédito y deuda actual</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Tipo de cambio automático</td><td class="feature-desc">Fetch diario de tasas via Frankfurter API para conversión entre monedas</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🗄️</td><td class="feature-name">Historial de saldos</td><td class="feature-desc">Gráfica de evolución del balance de cada cuenta en el tiempo</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📤</td><td class="feature-name">Archivado de cuentas</td><td class="feature-desc">Ocultar cuentas inactivas sin eliminar su historial</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S3 -->
+    <div class="section" id="s3">
+      <div class="section-header">
+        <div class="section-num">03</div>
+        <div>
+          <h2 class="section-title">Transacciones</h2>
+          <p class="section-desc">Registro, edición y gestión de ingresos y gastos</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>➕</td><td class="feature-name">Registro manual de gasto</td><td class="feature-desc">Formulario rápido: monto, categoría, cuenta, fecha, descripción y notas</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>💚</td><td class="feature-name">Registro manual de ingreso</td><td class="feature-desc">Igual que gastos pero tipo income con categorías de ingresos</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔍</td><td class="feature-name">Búsqueda y filtros avanzados</td><td class="feature-desc">Filtrar por fecha, categoría, cuenta, monto, comercio, tipo y etiquetas</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>✏️</td><td class="feature-name">Editar y eliminar transacciones</td><td class="feature-desc">Edición completa con confirmación de eliminación y audit trail</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🏷️</td><td class="feature-name">Etiquetas personalizadas</td><td class="feature-desc">Tags libres para agrupar transacciones cruzando categorías (ej: viaje Portugal)</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📎</td><td class="feature-name">Adjuntar archivos</td><td class="feature-desc">Subir foto del comprobante o PDF a Supabase Storage por transacción</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📋</td><td class="feature-name">Transacciones divididas</td><td class="feature-desc">Split de una transacción en múltiples categorías (ej: supermercado = comida + limpieza)</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Exportar CSV / PDF</td><td class="feature-desc">Descargar historial filtrado en formato CSV para Excel o PDF formateado</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔁</td><td class="feature-name">Duplicar transacción</td><td class="feature-desc">Copiar una transacción existente como punto de partida para una nueva</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📌</td><td class="feature-name">Transacciones destacadas</td><td class="feature-desc">Marcar transacciones importantes para revisión posterior</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S4 -->
+    <div class="section" id="s4">
+      <div class="section-header">
+        <div class="section-num">04</div>
+        <div>
+          <h2 class="section-title">Captura por Foto — OCR + AI</h2>
+          <p class="section-desc">Leer tickets y facturas con IA, extraer ítems y categorizar automáticamente</p>
+        </div>
+      </div>
+      <div class="callout callout-blue">
+        <strong>Flujo:</strong> Foto del ticket → Gemini 2.5 Flash (visión nativa) → JSON estructurado con ítems, precios, comercio y categoría → Pre-llena el formulario → Usuario confirma. Todo en un solo request, sin OCR local intermedio.
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>📷</td><td class="feature-name">Captura de foto desde cámara</td><td class="feature-desc">Acceso directo a cámara del móvil para tomar foto del ticket en el momento</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📁</td><td class="feature-name">Upload de imagen / PDF</td><td class="feature-desc">Subir imagen o PDF desde galería o archivos del dispositivo</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🤖</td><td class="feature-name">Extracción con Gemini 2.5 Flash</td><td class="feature-desc">La imagen se envía directamente al modelo multimodal — extrae estructura completa del ticket sin OCR local</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>✅</td><td class="feature-name">Revisión y confirmación</td><td class="feature-desc">El formulario se pre-llena con los datos extraídos para que el usuario confirme o corrija</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🛒</td><td class="feature-name">Extracción de ítems del ticket</td><td class="feature-desc">El modelo extrae cada producto con nombre raw, cantidad, precio unitario y total de línea</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🏪</td><td class="feature-name">Detección del comercio</td><td class="feature-desc">Identificación automática del nombre de la tienda desde el encabezado del ticket</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Detección de fecha</td><td class="feature-desc">Extrae fecha y hora de la compra del ticket</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🧠</td><td class="feature-name">Aprendizaje de correcciones</td><td class="feature-desc">Si el usuario corrige la categoría, se guarda para mejorar sugerencias futuras</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔄</td><td class="feature-name">Re-procesar ticket</td><td class="feature-desc">Opción de volver a ejecutar AI en un ticket ya guardado</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📦</td><td class="feature-name">Batch upload</td><td class="feature-desc">Subir múltiples fotos a la vez y procesarlas en cola</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S5 -->
+    <div class="section" id="s5">
+      <div class="section-header">
+        <div class="section-num">05</div>
+        <div>
+          <h2 class="section-title">Categorías</h2>
+          <p class="section-desc">Organización de ingresos y gastos</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>📂</td><td class="feature-name">Categorías por defecto</td><td class="feature-desc">Set inicial con categorías comunes: Comida, Transporte, Salud, Hogar, Entretenimiento...</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🎨</td><td class="feature-name">Categorías personalizadas</td><td class="feature-desc">Crear, editar y eliminar categorías propias con nombre, icono y color</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📁</td><td class="feature-name">Subcategorías</td><td class="feature-desc">Jerarquía de dos niveles: Alimentación &gt; Supermercado, Restaurantes, Delivery</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>💰</td><td class="feature-name">Tipo de categoría</td><td class="feature-desc">Income (ingreso) o Expense (gasto) por categoría para presupuestos correctos</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Presupuesto por categoría</td><td class="feature-desc">Asignar límite mensual/anual por categoría con alerta de porcentaje</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔒</td><td class="feature-name">Categorías de sistema</td><td class="feature-desc">Categorías no eliminables: Transferencia, Ajuste de saldo, Sin categoría</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📤</td><td class="feature-name">Exportar/importar categorías</td><td class="feature-desc">Compartir o hacer backup de la configuración de categorías</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S6 -->
+    <div class="section" id="s6">
+      <div class="section-header">
+        <div class="section-num">06</div>
+        <div>
+          <h2 class="section-title">Presupuesto</h2>
+          <p class="section-desc">Control de límites de gasto por categoría y período</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🎯</td><td class="feature-name">Presupuesto mensual global</td><td class="feature-desc">Definir cuánto gastar en total por mes con tracking en tiempo real</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📂</td><td class="feature-name">Presupuesto por categoría</td><td class="feature-desc">Límite individual por categoría: Comida $500, Transporte $200...</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Barras de progreso visuales</td><td class="feature-desc">Porcentaje consumido por categoría con color semáforo (verde / naranja / rojo)</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⚠️</td><td class="feature-name">Alertas de presupuesto</td><td class="feature-desc">Notificación al alcanzar el 80% y el 100% de cualquier presupuesto</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔄</td><td class="feature-name">Rollover de presupuesto</td><td class="feature-desc">Arrastrar el sobrante o déficit del mes anterior al mes siguiente</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Presupuesto anual</td><td class="feature-desc">Vista y planificación del presupuesto en horizonte anual con proyecciones</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Comparativo mes vs mes</td><td class="feature-desc">Ver cómo el gasto actual compara con el mismo período del año anterior</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🧮</td><td class="feature-name">Presupuesto basado en historial</td><td class="feature-desc">Sugerencia automática de presupuesto basada en el promedio de los últimos 3 meses</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>📋</td><td class="feature-name">Templates de presupuesto</td><td class="feature-desc">Guardar y aplicar plantillas de presupuesto para diferentes contextos</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S7 -->
+    <div class="section" id="s7">
+      <div class="section-header">
+        <div class="section-num">07</div>
+        <div>
+          <h2 class="section-title">Ingresos Recurrentes y Automatización</h2>
+          <p class="section-desc">Gastos e ingresos fijos automáticos via Supabase Edge Functions + pg_cron</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🔁</td><td class="feature-name">Transacciones recurrentes</td><td class="feature-desc">Definir ingresos o gastos fijos con frecuencia (diaria/semanal/mensual/anual), monto y cuenta</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⚡</td><td class="feature-name">Creación automática</td><td class="feature-desc">Cron job diario crea las transacciones automáticamente al vencer su fecha</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📋</td><td class="feature-name">Lista de recurrentes activos</td><td class="feature-desc">Vista completa de todas las reglas activas con próxima fecha y estado</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⏸️</td><td class="feature-name">Pausar / reactivar reglas</td><td class="feature-desc">Suspender temporalmente un recurrente sin eliminarlo</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Proyección de flujo de caja</td><td class="feature-desc">Ver ingresos y gastos automáticos proyectados para los próximos 30/60/90 días</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔔</td><td class="feature-name">Recordatorio de pago manual</td><td class="feature-desc">Alerta para transacciones recurrentes que requieren confirmación manual</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📆</td><td class="feature-name">Calendario de pagos</td><td class="feature-desc">Vista mensual tipo calendario con todos los vencimientos próximos</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏦</td><td class="feature-name">Detección de recurrentes</td><td class="feature-desc">AI sugiere crear regla recurrente cuando detecta pagos repetidos similares</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S8 -->
+    <div class="section" id="s8">
+      <div class="section-header">
+        <div class="section-num">08</div>
+        <div>
+          <h2 class="section-title">Metas de Ahorro</h2>
+          <p class="section-desc">Objetivos financieros con tracking y aportes automáticos</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🎯</td><td class="feature-name">Crear meta de ahorro</td><td class="feature-desc">Nombre, monto objetivo, fecha límite, cuenta asociada e imagen/icono</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>💸</td><td class="feature-name">Aportes manuales</td><td class="feature-desc">Registrar aportaciones individuales a una meta desde cualquier cuenta</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Progreso visual</td><td class="feature-desc">Barra de progreso, porcentaje completado y proyección de fecha de alcance</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔄</td><td class="feature-name">Aportes automáticos recurrentes</td><td class="feature-desc">Programar aporte mensual automático a una meta desde ingresos recurrentes</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Simulador de ahorro</td><td class="feature-desc">Calcular: si ahorro $X por mes, ¿cuándo alcanzo el objetivo?</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏆</td><td class="feature-name">Metas completadas</td><td class="feature-desc">Historial de metas alcanzadas con fecha y logro celebrado</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>💡</td><td class="feature-name">Sugerencia de ahorro</td><td class="feature-desc">Basado en el sobrante mensual, sugiere cuánto aportar a cada meta activa</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>👨‍👩‍👧</td><td class="feature-name">Metas compartidas</td><td class="feature-desc">Metas colaborativas entre miembros del perfil familiar</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S9 -->
+    <div class="section" id="s9">
+      <div class="section-header">
+        <div class="section-num">09</div>
+        <div>
+          <h2 class="section-title">Catálogo de Productos y Price Tracking</h2>
+          <p class="section-desc">Historial de precios de productos, alertas y comparación entre tiendas</p>
+        </div>
+      </div>
+      <div class="callout callout-green">
+        <strong>Diferenciador clave:</strong> Cada ticket procesado alimenta un historial de precios personal. Con el tiempo, la app sabe cuánto pagaste por cada producto en cada tienda y te alerta cuando el precio sube, baja o alcanza un mínimo histórico.
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🛒</td><td class="feature-name">Extracción automática de ítems</td><td class="feature-desc">Al procesar un ticket, se guardan todos los productos con su precio unitario y cantidad</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📦</td><td class="feature-name">Catálogo personal de productos</td><td class="feature-desc">Base de datos propia del usuario con productos normalizados que compra habitualmente</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔤</td><td class="feature-name">Normalización de nombres</td><td class="feature-desc">Fuzzy matching con fuse.js para reconocer "LECHE ENTR 1L" como el mismo producto que "Leche Entera 1Lt"</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🏪</td><td class="feature-name">Registro de comercios</td><td class="feature-desc">Catálogo de tiendas con historial de compras por comercio</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Historial de precios por producto</td><td class="feature-desc">Gráfica de evolución del precio de cada producto en el tiempo</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🗺️</td><td class="feature-name">Precio por tienda</td><td class="feature-desc">Ver cuánto cuesta el mismo producto en cada comercio donde lo has comprado</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Precio promedio y tendencia</td><td class="feature-desc">Promedio últimos 30 días, promedio histórico, tendencia al alza o a la baja</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🎉</td><td class="feature-name">Alerta: mejor precio histórico</td><td class="feature-desc">Notificación cuando se compra un producto al precio más bajo que se ha registrado jamás</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Alerta: precio aumentó</td><td class="feature-desc">Aviso cuando un producto cuesta X% más que la última vez o que el promedio</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>💰</td><td class="feature-name">Alerta: buen deal</td><td class="feature-desc">Aviso cuando el precio está X% por debajo del promedio habitual del producto</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏪</td><td class="feature-name">Alerta: tienda más cara</td><td class="feature-desc">Indica si la tienda actual cobra significativamente más que otras para el mismo producto</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🧺</td><td class="feature-name">Mi canasta habitual</td><td class="feature-desc">Lista automática de los productos que el usuario compra frecuentemente</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>💹</td><td class="feature-name">Índice de inflación personal</td><td class="feature-desc">Calcula cómo ha variado el costo de tu canasta específica en el tiempo vs inflación oficial</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>🏆</td><td class="feature-name">Comparador de tiendas</td><td class="feature-desc">¿Cuánto costaría tu compra semanal habitual en cada tienda?</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>📷</td><td class="feature-name">Escaneo de código de barras</td><td class="feature-desc">Leer barcode para identificar producto y asignar precio sin OCR completo</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>🔗</td><td class="feature-name">Vincular producto a precio online</td><td class="feature-desc">Comparar precio pagado en tienda vs precio online del mismo producto</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S10 -->
+    <div class="section" id="s10">
+      <div class="section-header">
+        <div class="section-num">10</div>
+        <div>
+          <h2 class="section-title">Dashboard y Visualizaciones</h2>
+          <p class="section-desc">Vista principal en tiempo real del estado financiero</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>💰</td><td class="feature-name">Capital total neto</td><td class="feature-desc">Suma de todas las cuentas en moneda base en tiempo real</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Resumen mensual</td><td class="feature-desc">Ingresos totales, gastos totales y balance del mes en curso</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🍩</td><td class="feature-name">Gráfica de gastos por categoría</td><td class="feature-desc">Donut chart interactivo con distribución de gastos del período seleccionado</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Gráfica ingreso vs gasto</td><td class="feature-desc">Bar chart mensual comparando ingresos y gastos de los últimos N meses</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔥</td><td class="feature-name">Gastos recientes</td><td class="feature-desc">Feed de las últimas transacciones con acceso rápido a detalle</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⚠️</td><td class="feature-name">Alertas activas en dashboard</td><td class="feature-desc">Panel de notificaciones: presupuestos al límite, precios altos, metas próximas</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Selector de período</td><td class="feature-desc">Filtrar todo el dashboard por mes, trimestre, año o rango personalizado</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📱</td><td class="feature-name">Dashboard móvil optimizado</td><td class="feature-desc">Vista compacta especialmente diseñada para usar en el teléfono</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📉</td><td class="feature-name">Tendencia de gastos</td><td class="feature-desc">Línea de tendencia para detectar si el gasto está subiendo o bajando</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🎯</td><td class="feature-name">Widget de metas de ahorro</td><td class="feature-desc">Estado visual de todas las metas activas con % de progreso</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📆</td><td class="feature-name">Próximos vencimientos</td><td class="feature-desc">Lista de transacciones recurrentes que vencen en los próximos 7 días</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Tasa de ahorro mensual</td><td class="feature-desc">Porcentaje del ingreso que se está ahorrando vs objetivo definido</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🌡️</td><td class="feature-name">Score financiero personal</td><td class="feature-desc">Indicador 0–100 basado en: cumplimiento de presupuesto, ahorro y deudas</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>🔮</td><td class="feature-name">Proyección fin de mes</td><td class="feature-desc">Basado en el ritmo actual, proyecta el gasto total al cierre del mes</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S11 -->
+    <div class="section" id="s11">
+      <div class="section-header">
+        <div class="section-num">11</div>
+        <div>
+          <h2 class="section-title">Reportes y Análisis</h2>
+          <p class="section-desc">Historial financiero, tendencias y exportación de datos</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>📊</td><td class="feature-name">Reporte mensual completo</td><td class="feature-desc">Resumen detallado del mes: ingresos, gastos por categoría, comparativo con presupuesto</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📈</td><td class="feature-name">Análisis de tendencias</td><td class="feature-desc">Evolución de gastos por categoría en los últimos 6 o 12 meses</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏪</td><td class="feature-name">Gasto por comercio</td><td class="feature-desc">Ranking de tiendas y comercios donde más se gasta</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Reporte anual</td><td class="feature-desc">Vista consolidada del año con breakdown mensual y proyección de cierre</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🛒</td><td class="feature-name">Reporte de productos</td><td class="feature-desc">Los productos más comprados, con mayor variación de precio y mejor deal del período</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔖</td><td class="feature-name">Reporte por etiquetas</td><td class="feature-desc">Análisis de cuánto se gastó en viajes, proyectos o cualquier etiqueta personalizada</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>💸</td><td class="feature-name">Análisis de gastos hormiga</td><td class="feature-desc">Identifica y muestra el impacto acumulado de gastos pequeños y frecuentes</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>📤</td><td class="feature-name">Export PDF personalizado</td><td class="feature-desc">Generar PDF del reporte seleccionado con diseño branded para guardar o compartir</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>📧</td><td class="feature-name">Resumen mensual por email</td><td class="feature-desc">Email automático al cierre del mes con los highlights financieros</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+            <tr><td>🤖</td><td class="feature-name">Insights con AI</td><td class="feature-desc">Análisis narrativo generado por AI con observaciones y sugerencias del mes</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S12 -->
+    <div class="section" id="s12">
+      <div class="section-header">
+        <div class="section-num">12</div>
+        <div>
+          <h2 class="section-title">Notificaciones y Alertas</h2>
+          <p class="section-desc">Sistema proactivo de avisos in-app, email y push</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🔔</td><td class="feature-name">Centro de notificaciones in-app</td><td class="feature-desc">Panel de todas las alertas activas, leídas y no leídas</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⚠️</td><td class="feature-name">Alerta presupuesto al 80%</td><td class="feature-desc">Notificación cuando se consume el 80% del límite de una categoría</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🚨</td><td class="feature-name">Alerta presupuesto excedido</td><td class="feature-desc">Aviso inmediato cuando se supera el presupuesto de cualquier categoría</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📦</td><td class="feature-name">Alerta precio de producto</td><td class="feature-desc">Producto más caro que histórico, mejor precio registrado o buen deal detectado</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>💡</td><td class="feature-name">Recordatorio de recurrentes</td><td class="feature-desc">Aviso previo a transacciones programadas que requieren acción manual</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🏆</td><td class="feature-name">Felicitación de meta alcanzada</td><td class="feature-desc">Celebración con animación cuando se completa una meta de ahorro</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📧</td><td class="feature-name">Notificaciones por email</td><td class="feature-desc">Alertas críticas también enviadas al email del usuario</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>⚙️</td><td class="feature-name">Configuración de alertas</td><td class="feature-desc">El usuario define qué alertas recibe, por qué canal y con qué umbral</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📱</td><td class="feature-name">Push notifications (PWA)</td><td class="feature-desc">Notificaciones push en móvil via Progressive Web App</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S13 -->
+    <div class="section" id="s13">
+      <div class="section-header">
+        <div class="section-num">13</div>
+        <div>
+          <h2 class="section-title">Configuración y Personalización</h2>
+          <p class="section-desc">Preferencias del usuario, moneda, idioma y gestión de datos</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>💱</td><td class="feature-name">Moneda base y formato</td><td class="feature-desc">Seleccionar moneda principal, símbolo, separadores decimal y de miles</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🌙</td><td class="feature-name">Modo oscuro / claro</td><td class="feature-desc">Tema visual configurable con detección automática del sistema operativo</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📅</td><td class="feature-name">Día de inicio de mes</td><td class="feature-desc">Definir cuándo empieza el mes financiero (ej: día 15 si el sueldo cae a mitad de mes)</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔤</td><td class="feature-name">Idioma</td><td class="feature-desc">Soporte completo en español e inglés</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📂</td><td class="feature-name">Gestión de categorías</td><td class="feature-desc">CRUD completo de categorías y subcategorías desde settings</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🏦</td><td class="feature-name">Gestión de cuentas</td><td class="feature-desc">Crear, editar, reordenar y archivar cuentas financieras</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔁</td><td class="feature-name">Gestión de recurrentes</td><td class="feature-desc">Vista y control de todas las reglas de automatización activas</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🤖</td><td class="feature-name">Config de AI</td><td class="feature-desc">Nivel de confianza mínimo para auto-aceptar categorización, idioma del OCR</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔔</td><td class="feature-name">Preferencias de notificaciones</td><td class="feature-desc">Control granular de qué alertas activar por canal (in-app, email, push)</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🗄️</td><td class="feature-name">Backup y restauración</td><td class="feature-desc">Exportar toda la data en JSON para backup, importar para restaurar</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🗑️</td><td class="feature-name">Eliminar cuenta</td><td class="feature-desc">Eliminación completa de datos con confirmación y período de gracia de 30 días</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S14 -->
+    <div class="section" id="s14">
+      <div class="section-header">
+        <div class="section-num">14</div>
+        <div>
+          <h2 class="section-title">Progressive Web App — Móvil</h2>
+          <p class="section-desc">Experiencia nativa en iOS y Android sin App Store · Powered by Serwist (@serwist/next)</p>
+        </div>
+      </div>
+      <div class="callout callout-blue">
+        <strong>Serwist (@serwist/next):</strong> Sucesor de next-pwa, recomendado oficialmente por Next.js. Basado en Google Workbox, maneja Service Workers, precaching del app shell y estrategias de caching en runtime. Para el <strong>modo offline con datos</strong>, Serwist cachea la app para que cargue sin conexión, y se complementa con <strong>IndexedDB</strong> (via lib <code>idb</code>) para almacenar transacciones creadas offline localmente. Al reconectar, un mecanismo de sync detecta la conexión y envía los registros pendientes a Supabase.
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>📱</td><td class="feature-name">Instalable como app (PWA)</td><td class="feature-desc">Añadir a pantalla de inicio en iOS y Android sin App Store. Manifest y Service Worker generados via @serwist/next</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>📷</td><td class="feature-name">Captura directa de cámara</td><td class="feature-desc">Integración nativa con cámara del móvil para fotos de tickets</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>⚡</td><td class="feature-name">Acceso rápido: añadir gasto</td><td class="feature-desc">Botón flotante para registrar un gasto en menos de 5 segundos</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🗄️</td><td class="feature-name">Precaching con Serwist</td><td class="feature-desc">App shell, rutas principales y assets estáticos precacheados automáticamente por Serwist al instalar el Service Worker</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>🔌</td><td class="feature-name">Modo offline con datos</td><td class="feature-desc">Serwist cachea la app para carga offline. Las transacciones creadas sin conexión se guardan en IndexedDB (lib idb) como cola de pendientes</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔄</td><td class="feature-name">Sync automático al reconectar</td><td class="feature-desc">Al detectar conexión (navigator.onLine + evento online), se procesan los registros pendientes en IndexedDB y se envían a Supabase</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Runtime caching de API</td><td class="feature-desc">Estrategias Serwist (stale-while-revalidate / network-first) para cachear respuestas de API y mostrar dashboard offline actualizado</td><td><span class="phase phase-2">Fase 2</span></td></tr>
+            <tr><td>🔔</td><td class="feature-name">Push notifications</td><td class="feature-desc">Alertas de presupuesto y precios via PWA push notifications gestionadas desde el Service Worker de Serwist</td><td><span class="phase phase-3">Fase 3</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S15 -->
+    <div class="section" id="s15">
+      <div class="section-header">
+        <div class="section-num">15</div>
+        <div>
+          <h2 class="section-title">Monetización SaaS</h2>
+          <p class="section-desc">Billing con Polar.sh como Merchant of Record — sin mensualidad, 4% + $0.40/tx</p>
+        </div>
+      </div>
+      <div class="callout callout-amber">
+        <strong>Polar.sh vs Paddle:</strong> Polar es MoR (maneja IVA/GST/taxes globalmente), open-source, developer-first, sin mensualidad fija, fee de solo 4% + $0.40/tx. Integración nativa con Next.js en horas. Recomendado por el equipo de Vercel.
+      </div>
+      <div class="table-wrap">
+        <table class="feature-table">
+          <thead><tr><th></th><th>Feature</th><th>Descripción</th><th>Fase</th></tr></thead>
+          <tbody>
+            <tr><td>🏗️</td><td class="feature-name">Arquitectura multi-tenant</td><td class="feature-desc">Schema con profile_id desde el MVP — preparado para múltiples usuarios sin refactoring</td><td><span class="phase phase-mvp">MVP</span></td></tr>
+            <tr><td>❄️</td><td class="feature-name">Polar.sh integrado (MoR)</td><td class="feature-desc">Billing completo via Polar.sh — maneja IVA, GST y taxes globales automáticamente. Fee: 4% + $0.40/tx, sin mensualidad fija</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>🔗</td><td class="feature-name">Webhooks de Polar</td><td class="feature-desc">Escuchar eventos subscription.created/updated/canceled para activar o desactivar features por plan en tiempo real</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>📦</td><td class="feature-name">Plan Free</td><td class="feature-desc">1 cuenta, 50 transacciones/mes, sin OCR AI, sin price tracking histórico</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>⭐</td><td class="feature-name">Plan Pro</td><td class="feature-desc">Ilimitado: cuentas, transacciones, OCR con AI, price tracking completo, reportes avanzados</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>👨‍👩‍👧</td><td class="feature-name">Plan Familia</td><td class="feature-desc">Hasta 5 perfiles, metas compartidas y dashboard consolidado del hogar</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>📊</td><td class="feature-name">Dashboard de métricas SaaS</td><td class="feature-desc">MRR, churn, usuarios activos, conversión Free→Pro para el founder</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>🎁</td><td class="feature-name">Trial Pro de 14 días</td><td class="feature-desc">Al registrarse, todos los usuarios tienen 14 días de Pro gratis sin tarjeta</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>🔑</td><td class="feature-name">Feature flags por plan</td><td class="feature-desc">Control granular de qué features están disponibles según el plan activo</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>📧</td><td class="feature-name">Onboarding email sequence</td><td class="feature-desc">Secuencia de emails de activación y upgrade basada en comportamiento de uso</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+            <tr><td>🌐</td><td class="feature-name">Landing page pública</td><td class="feature-desc">Marketing site con pricing, features y testimonios para captación orgánica</td><td><span class="phase phase-4">Fase 4</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- S16 — AI COSTS -->
+    <div class="section" id="s16">
+      <div class="section-header">
+        <div class="section-num">16</div>
+        <div>
+          <h2 class="section-title">Modelos de AI — Análisis de Costos OCR</h2>
+          <p class="section-desc">Precios actualizados a Marzo 2026 · La imagen se envía directamente al modelo multimodal</p>
+        </div>
+      </div>
+
+      <div class="table-wrap" style="margin-bottom:20px">
+        <table class="ai-cost-table">
+          <thead>
+            <tr>
+              <th>Modelo</th>
+              <th>Input /1M</th>
+              <th>Output /1M</th>
+              <th>Costo/ticket</th>
+              <th>10K tickets</th>
+              <th>150K tickets/mes</th>
+              <th>Recomendación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="model-name">🟢 Gemini 2.5 Flash</div>
+                <div class="model-provider">Google · Multimodal nativo</div>
+              </td>
+              <td><span class="price-val">$0.30</span></td>
+              <td><span class="price-val">$2.50</span></td>
+              <td><span class="price-val">~$0.000003</span></td>
+              <td><span class="price-val">~$0.03</span></td>
+              <td><span class="price-val">~$0.45</span></td>
+              <td><span class="rec-badge rec-saas">✅ SaaS</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-name">🟡 Claude Haiku 4.5</div>
+                <div class="model-provider">Anthropic · Mismo SDK</div>
+              </td>
+              <td><span class="price-val">$1.00</span></td>
+              <td><span class="price-val">$5.00</span></td>
+              <td><span class="price-val">~$0.000004</span></td>
+              <td><span class="price-val">~$0.04</span></td>
+              <td><span class="price-val">~$0.60</span></td>
+              <td><span class="rec-badge rec-mvp">✅ MVP</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-name">🔵 GPT-4o mini</div>
+                <div class="model-provider">OpenAI · Probado y estable</div>
+              </td>
+              <td><span class="price-val">$0.15</span></td>
+              <td><span class="price-val">$0.60</span></td>
+              <td><span class="price-val">~$0.0000005</span></td>
+              <td><span class="price-val">~$0.005</span></td>
+              <td><span class="price-val">~$0.08</span></td>
+              <td><span class="rec-badge rec-alt">Alternativa</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-name">⚪ GPT-4.1 Nano</div>
+                <div class="model-provider">OpenAI · Ultra-barato</div>
+              </td>
+              <td><span class="price-val">$0.02</span></td>
+              <td><span class="price-val">$0.15</span></td>
+              <td><span class="price-val">~$0.0000001</span></td>
+              <td><span class="price-val">~$0.001</span></td>
+              <td><span class="price-val">~$0.015</span></td>
+              <td><span class="rec-badge rec-basic">Menor calidad</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout callout-green">
+        <strong>Estrategia por fase — </strong>
+        <strong style="color:#15803D">MVP personal:</strong> Claude Haiku 4.5 — mismo SDK de Anthropic, un solo proveedor para todo, costo &lt;$0.01/mes a escala personal. ·
+        <strong style="color:#15803D">SaaS Fase 4:</strong> Gemini 2.5 Flash — visión nativa superior en tickets con mala iluminación o texto impreso, 3× más barato que Haiku. ·
+        <strong style="color:#15803D">Híbrido opcional:</strong> Gemini 2.5 Flash para OCR visual + Gemini Flash-Lite ($0.10/$0.40) para normalización de nombres de productos (solo texto).
+      </div>
+
+      <div class="callout callout-blue">
+        <strong>Escenario real SaaS con 5,000 usuarios activos (30 tickets/mes c/u = 150,000 tickets/mes):</strong> Gemini 2.5 Flash ~$0.45/mes total en AI. Con 50,000 usuarios: ~$4.50/mes. El costo de AI nunca será un factor limitante en este producto.
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="section" id="summary">
+      <div class="section-header">
+        <div class="section-num">—</div>
+        <div>
+          <h2 class="section-title">Resumen de Fases de Desarrollo</h2>
+          <p class="section-desc">Estimación total: 14–19 semanas de MVP a SaaS</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="phase-table">
+          <thead>
+            <tr>
+              <th>Fase</th>
+              <th>Objetivo</th>
+              <th>Features clave</th>
+              <th>Estimado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="phase-label" style="color:#15803D">● MVP</span></td>
+              <td class="feature-desc" style="font-weight:500;color:var(--ink)">Uso personal funcional</td>
+              <td class="phase-features">Auth, cuentas, transacciones manuales, OCR+AI (Haiku 4.5), presupuesto por categorías, extracción de ítems, catálogo de productos básico, dashboard, PWA instalable</td>
+              <td><span class="time-badge">4–6 sem</span></td>
+            </tr>
+            <tr>
+              <td><span class="phase-label" style="color:#1D4ED8">● Fase 2</span></td>
+              <td class="feature-desc" style="font-weight:500;color:var(--ink)">Features avanzados</td>
+              <td class="phase-features">Price tracking completo, alertas de precios, recurrentes automáticos, metas de ahorro, reportes históricos, multi-moneda, modo offline básico</td>
+              <td><span class="time-badge">4–5 sem</span></td>
+            </tr>
+            <tr>
+              <td><span class="phase-label" style="color:#6D28D9">● Fase 3</span></td>
+              <td class="feature-desc" style="font-weight:500;color:var(--ink)">Inteligencia y profundidad</td>
+              <td class="phase-features">Insights AI, índice de inflación personal, comparador de tiendas para tu canasta, score financiero 0–100, proyecciones de fin de mes, push notifications PWA</td>
+              <td><span class="time-badge">3–4 sem</span></td>
+            </tr>
+            <tr>
+              <td><span class="phase-label" style="color:#B91C1C">● Fase 4</span></td>
+              <td class="feature-desc" style="font-weight:500;color:var(--ink)">Lanzamiento SaaS</td>
+              <td class="phase-features">Polar.sh billing (MoR), planes Free/Pro/Familia, trial 14 días, feature flags, landing page pública, onboarding email sequence, dashboard de métricas SaaS, migrar OCR a Gemini 2.5 Flash</td>
+              <td><span class="time-badge">3–4 sem</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+
+  <footer class="doc-footer">
+    <div>
+      <div class="footer-brand">💰 FinTrack</div>
+      <div style="margin-top:4px">Feature Specification Document · v1.1</div>
+    </div>
+    <div style="text-align:right">
+      <div>Next.js 15 · Supabase · Drizzle ORM · Shadcn UI</div>
+      <div style="margin-top:4px">Gemini 2.5 Flash · Claude Haiku 4.5 · Polar.sh</div>
+    </div>
+  </footer>
+
+</div><!-- /main -->
+
+<script>
+  // Active nav highlight on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(item => item.classList.remove('active'));
+        const active = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
