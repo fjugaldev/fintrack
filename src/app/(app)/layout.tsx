@@ -2,7 +2,6 @@ import { redirect } from "next/navigation"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { AppSidebar } from "@/components/app-sidebar"
-import { BottomNav } from "@/components/layout/bottom-nav"
 import { getProfile } from "@/lib/db/actions/profile.actions"
 import { ThemeSync } from "./_components/theme-sync"
 
@@ -28,10 +27,9 @@ export default async function AppLayout({
             className="mr-2 data-vertical:h-4 data-vertical:self-auto"
           />
         </header>
-        <main className="flex-1 p-4 md:p-6 pb-24 md:pb-6 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-6 pb-6 overflow-y-auto">
           {children}
         </main>
-        <BottomNav />
       </SidebarInset>
     </SidebarProvider>
   )
