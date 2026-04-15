@@ -27,7 +27,7 @@ export default async function AppLayout({
             className="mr-2 data-vertical:h-4 data-vertical:self-auto"
           />
         </header>
-        <main className="flex-1 p-4 md:p-6 pb-6 overflow-y-auto">
+        <main className="flex-1 p-4 md:p-6 pb-6 overflow-y-auto overflow-x-hidden min-w-0">
           {children}
         </main>
       </SidebarInset>

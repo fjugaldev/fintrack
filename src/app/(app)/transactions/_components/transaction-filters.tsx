@@ -57,34 +57,34 @@ export function TransactionFilters({ accounts, currentFilters }: TransactionFilt
   const selectedAccount = accounts.find((a) => a.id === currentFilters.accountId)
 
   return (
-    <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-end">
-      <Field className="w-full sm:w-auto">
+    <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap sm:items-end min-w-0">
+      <Field className="w-full min-w-0 sm:w-auto">
         <FieldLabel className="text-xs">Desde</FieldLabel>
         <Input
           type="date"
-          className="h-8 text-sm w-full sm:w-36"
+          className="h-8 text-sm w-full min-w-0 sm:w-36"
           value={currentFilters.dateFrom ?? ''}
           onChange={(e) => handleChange('dateFrom', e.target.value)}
         />
       </Field>
 
-      <Field className="w-full sm:w-auto">
+      <Field className="w-full min-w-0 sm:w-auto">
         <FieldLabel className="text-xs">Hasta</FieldLabel>
         <Input
           type="date"
-          className="h-8 text-sm w-full sm:w-36"
+          className="h-8 text-sm w-full min-w-0 sm:w-36"
           value={currentFilters.dateTo ?? ''}
           onChange={(e) => handleChange('dateTo', e.target.value)}
         />
       </Field>
 
-      <Field className="w-full sm:w-auto">
+      <Field className="w-full min-w-0 sm:w-auto">
         <FieldLabel className="text-xs">Tipo</FieldLabel>
         <Select
           value={currentFilters.type ?? 'all'}
           onValueChange={(v) => handleChange('type', v ?? '')}
         >
-          <SelectTrigger className="h-8 text-sm w-full sm:w-36">
+          <SelectTrigger className="h-8 text-sm w-full min-w-0 sm:w-36">
             <SelectValue>
               {TYPE_LABELS[currentFilters.type ?? 'all'] ?? 'Todos'}
             </SelectValue>
@@ -101,13 +101,13 @@ export function TransactionFilters({ accounts, currentFilters }: TransactionFilt
         </Select>
       </Field>
 
-      <Field className="w-full sm:w-auto">
+      <Field className="w-full min-w-0 sm:w-auto">
         <FieldLabel className="text-xs">Cuenta</FieldLabel>
         <Select
           value={currentFilters.accountId ?? 'all'}
           onValueChange={(v) => handleChange('accountId', v ?? '')}
         >
-          <SelectTrigger className="h-8 text-sm w-full sm:w-40">
+          <SelectTrigger className="h-8 text-sm w-full min-w-0 sm:w-40">
             <SelectValue>
               {selectedAccount?.name ?? 'Todas'}
             </SelectValue>
