@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
@@ -41,8 +42,22 @@ export function AppSidebar({ profile }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
-        <span className="font-bold text-lg group-data-[collapsible=icon]:hidden">FinTrack</span>
-        <span className="font-bold text-lg hidden group-data-[collapsible=icon]:block">FT</span>
+        <Image
+          src="/logo-fintrack.png"
+          alt="FinTrack"
+          width={140}
+          height={40}
+          className="group-data-[collapsible=icon]:hidden"
+          priority
+        />
+        <Image
+          src="/logo-fintrack-shape.png"
+          alt="FinTrack"
+          width={32}
+          height={32}
+          className="hidden group-data-[collapsible=icon]:block"
+          priority
+        />
       </SidebarHeader>
 
       <SidebarContent>

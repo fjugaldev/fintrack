@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -58,20 +59,25 @@ export function AppSidebar({ profile, ...props }: AppSidebarProps) {
 
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <TrendingUpIcon className="size-4" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">FinTrack</span>
-                <span className="truncate text-xs text-muted-foreground">Finanzas personales</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+      <SidebarHeader className="flex items-center justify-center p-4 group-data-[collapsible=icon]:p-1">
+        <Link href="/dashboard" className="flex items-center justify-center">
+          <Image
+            src="/logo-fintrack.png"
+            alt="FinTrack"
+            width={140}
+            height={40}
+            className="group-data-[collapsible=icon]:hidden"
+            priority
+          />
+          <Image
+            src="/logo-fintrack-shape.png"
+            alt="FinTrack"
+            width={40}
+            height={40}
+            className="hidden group-data-[collapsible=icon]:block"
+            priority
+          />
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
