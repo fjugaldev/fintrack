@@ -31,7 +31,7 @@ export function useOtpVerify(email: string) {
       return
     }
 
-    router.push('/dashboard')
+    router.push('/')
   }
 
   const resendOtp = useCallback(async () => {

@@ -25,7 +25,7 @@ import { NavUser } from './nav-user'
 import type { Profile } from '@/lib/db/schema'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, enabled: true },
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard, enabled: true },
   { href: '/accounts', label: 'Cuentas', icon: Wallet, enabled: true },
   { href: '/transactions', label: 'Transacciones', icon: ArrowLeftRight, enabled: true },
   { href: '/budgets', label: 'Presupuesto', icon: PieChart, enabled: true },

@@ -197,7 +197,7 @@ export async function createTransaction(data: {
 
   revalidatePath('/transactions')
   revalidatePath('/accounts')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
   return result
 }
 
@@ -278,7 +278,7 @@ export async function updateTransaction(
 
   revalidatePath('/transactions')
   revalidatePath('/accounts')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
   return result
 }
 
@@ -316,5 +316,5 @@ export async function deleteTransaction(id: string) {
 
   revalidatePath('/transactions')
   revalidatePath('/accounts')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }

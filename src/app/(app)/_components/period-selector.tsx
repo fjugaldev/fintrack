@@ -29,7 +29,7 @@ export function PeriodSelector({ currentMonth }: PeriodSelectorProps) {
   }).format(new Date(currentMonth + '-02')) // día 2 para evitar desfases de TZ
 
   function go(delta: number) {
-    router.push(`/dashboard?month=${shiftMonth(currentMonth, delta)}`)
+    router.push(`/?month=${shiftMonth(currentMonth, delta)}`)
   }
 
   return (

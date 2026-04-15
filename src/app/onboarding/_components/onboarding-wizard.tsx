@@ -21,7 +21,7 @@ export function OnboardingWizard({ profile }: OnboardingWizardProps) {
   }
 
   function handleStep2Complete() {
-    router.push('/dashboard')
+    router.push('/')
   }
 
   // Paso 1 guarda currency en el profile; necesitamos pasarla al paso 2.

@@ -191,7 +191,7 @@ export async function applyRecurringTransaction(id: string) {
 
   revalidatePath('/recurring')
   revalidatePath('/transactions')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function getDueRecurringTransactions(): Promise<RecurringWithRelations[]> {

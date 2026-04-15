@@ -32,7 +32,7 @@ import {
 import type { Profile } from "@/lib/db/schema"
 
 const navMain = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboardIcon },
+  { title: "Dashboard", url: "/", icon: LayoutDashboardIcon },
   { title: "Cuentas", url: "/accounts", icon: WalletIcon },
   { title: "Transacciones", url: "/transactions", icon: ArrowLeftRightIcon },
   { title: "Recurrentes", url: "/recurring", icon: RefreshCcwIcon },
@@ -60,7 +60,7 @@ export function AppSidebar({ profile, ...props }: AppSidebarProps) {
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader className="flex items-center justify-center p-4 group-data-[collapsible=icon]:p-1">
-        <Link href="/dashboard" className="flex items-center justify-center">
+        <Link href="/" className="flex items-center justify-center">
           <Image
             src="/logo-fintrack.png"
             alt="FinTrack"

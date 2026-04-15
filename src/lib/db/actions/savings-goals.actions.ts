@@ -126,7 +126,7 @@ export async function createSavingsGoal(data: {
   })
 
   revalidatePath('/goals')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function updateSavingsGoal(
@@ -158,7 +158,7 @@ export async function updateSavingsGoal(
     .where(and(eq(savingsGoals.id, id), eq(savingsGoals.profileId, profileId)))
 
   revalidatePath('/goals')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function addContribution(goalId: string, amount: string) {
@@ -179,7 +179,7 @@ export async function addContribution(goalId: string, amount: string) {
     )
 
   revalidatePath('/goals')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function deleteSavingsGoal(id: string) {
@@ -191,5 +191,5 @@ export async function deleteSavingsGoal(id: string) {
     .where(and(eq(savingsGoals.id, id), eq(savingsGoals.profileId, profileId)))
 
   revalidatePath('/goals')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }

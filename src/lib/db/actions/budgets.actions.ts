@@ -146,7 +146,7 @@ export async function createBudget(data: {
   })
 
   revalidatePath('/budgets')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function updateBudget(
@@ -166,12 +166,12 @@ export async function updateBudget(
     .where(and(eq(budgets.id, id), eq(budgets.profileId, profileId)))
 
   revalidatePath('/budgets')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function deleteBudget(id: string) {
   const profileId = await getAuthUserId()
   await db.delete(budgets).where(and(eq(budgets.id, id), eq(budgets.profileId, profileId)))
   revalidatePath('/budgets')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }

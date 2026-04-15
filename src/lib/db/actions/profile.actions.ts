@@ -37,7 +37,7 @@ export async function updateProfilePreferences(data: {
     })
     .where(eq(profiles.id, userId))
   revalidatePath('/settings')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
 }
 
 export async function updateTheme(theme: string) {

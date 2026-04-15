@@ -6,7 +6,7 @@ export default async function OnboardingPage() {
   const profile = await getProfile()
 
   if (!profile) redirect('/auth/login')
-  if (profile.onboardingCompleted) redirect('/dashboard')
+  if (profile.onboardingCompleted) redirect('/')
 
   return (
     <main className="min-h-screen flex items-center justify-center p-4">

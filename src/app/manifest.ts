@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "FinTrack — Finanzas personales",
     short_name: "FinTrack",
     description: "Gestiona tus finanzas personales con FinTrack",
-    start_url: "/dashboard",
+    start_url: "/",
     display: "standalone",
     background_color: "#111110",
     theme_color: "#c07b3a",

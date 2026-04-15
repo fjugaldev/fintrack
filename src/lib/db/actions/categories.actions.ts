@@ -290,7 +290,7 @@ export async function migrateIconsToLucide() {
   }
   revalidatePath('/categories')
   revalidatePath('/transactions')
-  revalidatePath('/dashboard')
+  revalidatePath('/')
   return { updated: allCats.length }
 }
 

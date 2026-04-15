@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { LayoutDashboard, Wallet, ArrowLeftRight, PieChart } from 'lucide-react'
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Inicio', icon: LayoutDashboard, enabled: true },
+  { href: '/', label: 'Inicio', icon: LayoutDashboard, enabled: true },
   { href: '/accounts', label: 'Cuentas', icon: Wallet, enabled: true },
   { href: '/transactions', label: 'Movimientos', icon: ArrowLeftRight, enabled: true },
   { href: '/budgets', label: 'Presupuesto', icon: PieChart, enabled: true },
