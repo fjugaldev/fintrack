@@ -71,13 +71,13 @@ export default async function RecurringPage() {
             return (
               <div
                 key={rec.id}
-                className={`flex items-center gap-3 px-4 py-3 bg-background transition-colors ${
+                className={`flex gap-3 px-4 py-3 bg-background transition-colors ${
                   !rec.isActive ? 'opacity-50' : ''
                 }`}
               >
                 {/* Icon */}
                 <div
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                  className="flex h-9 w-9 shrink-0 mt-0.5 items-center justify-center rounded-full"
                   style={{ backgroundColor: `${rec.category?.color ?? '#6b7280'}20` }}
                 >
                   {CategoryIcon ? (
@@ -92,8 +92,9 @@ export default async function RecurringPage() {
                   )}
                 </div>
 
-                {/* Info */}
+                {/* Content */}
                 <div className="flex-1 min-w-0">
+                  {/* Title + badges */}
                   <div className="flex items-center gap-2 flex-wrap">
                     <span className="font-medium truncate">
                       {rec.description ?? rec.category?.name ?? 'Sin descripción'}
@@ -112,39 +113,42 @@ export default async function RecurringPage() {
                       </Badge>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5 text-xs text-muted-foreground">
-                    <span>{rec.account.name}</span>
-                    <span>·</span>
-                    <span>Próx. {formatDate(rec.nextDueDate)}</span>
+
+                  {/* Account + next date */}
+                  <div className="flex items-center gap-1.5 mt-0.5 text-xs text-muted-foreground">
+                    <span className="truncate">{rec.account.name}</span>
+                    <span className="shrink-0">·</span>
+                    <span className="whitespace-nowrap shrink-0">Próx. {formatDate(rec.nextDueDate)}</span>
                   </div>
-                </div>
 
-                {/* Amount */}
-                <span
-                  className={`shrink-0 font-semibold tabular-nums text-sm ${
-                    rec.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
-                  }`}
-                >
-                  {rec.type === 'income' ? '+' : '-'}
-                  {formatCurrency(rec.amount, rec.account.currency ?? currency)}
-                </span>
+                  {/* Amount + actions */}
+                  <div className="flex items-center justify-between mt-2">
+                    <span
+                      className={`font-semibold tabular-nums text-sm ${
+                        rec.type === 'income' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+                      }`}
+                    >
+                      {rec.type === 'income' ? '+' : '-'}
+                      {formatCurrency(rec.amount, rec.account.currency ?? currency)}
+                    </span>
 
-                {/* Actions */}
-                <div className="flex items-center gap-0.5 shrink-0">
-                  {rec.isActive && !appliedToday && (
-                    <ApplyRecurringButton
-                      id={rec.id}
-                      description={rec.description}
-                      isDue={isDue}
-                    />
-                  )}
-                  <ToggleActiveButton id={rec.id} isActive={rec.isActive} />
-                  <EditRecurringDialog
-                    recurring={rec}
-                    accounts={accounts}
-                    categories={categories}
-                  />
-                  <DeleteRecurringButton id={rec.id} />
+                    <div className="flex items-center gap-0.5">
+                      {rec.isActive && !appliedToday && (
+                        <ApplyRecurringButton
+                          id={rec.id}
+                          description={rec.description}
+                          isDue={isDue}
+                        />
+                      )}
+                      <ToggleActiveButton id={rec.id} isActive={rec.isActive} />
+                      <EditRecurringDialog
+                        recurring={rec}
+                        accounts={accounts}
+                        categories={categories}
+                      />
+                      <DeleteRecurringButton id={rec.id} />
+                    </div>
+                  </div>
                 </div>
               </div>
             )
