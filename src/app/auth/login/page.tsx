@@ -1,13 +1,14 @@
 'use client'
 
-import { Suspense, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { Suspense, useState, useEffect } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useAuthLogin } from '@/hooks/auth/use-auth-login'
+import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
   return (
@@ -19,10 +20,26 @@ export default function LoginPage() {
 
 function LoginForm() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const oauthError = searchParams.get('error') === 'oauth'
 
   const [email, setEmail] = useState('')
   const { loading, error, signInWithEmail, signInWithGoogle } = useAuthLogin()
+
+  // Cuando el SFSafariViewController se cierra tras el OAuth, el PWA
+  // recupera el foco y dispara visibilitychange. Aquí detectamos si
+  // la sesión ya fue establecida y navegamos al home.
+  useEffect(() => {
+    const handleVisibilityChange = async () => {
+      if (document.hidden) return
+      const supabase = createClient()
+      const { data: { session } } = await supabase.auth.getSession()
+      if (session) router.replace('/')
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [router])
 
   function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault()
